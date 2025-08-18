@@ -1,11 +1,15 @@
-{ config, pkgs, ... }:
-
 {
-  # Enable Zsh
+  config,
+  pkgs,
+  ...
+}: let
+  base = builtins.fromJSON (builtins.readFile ./vscode/styles.json);
+in { 
+      # Enable Zsh
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    autosuggestions.enable = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     history.size = 10000;
   };
@@ -31,6 +35,16 @@
     ];
   };
 
+  programs.vscode = {
+    enable = true;
+    package = pkgs.vscode-fhs;
+
+    profiles.default.userSettings =
+      base
+      // {
+        "workbench.colorTheme" = lib.mkForce "Vira Ocean";
+      };
+  };
   # CLI tools
   home.packages = with pkgs; [
     ghostty
@@ -45,9 +59,8 @@
     btop
     delta
     lsd
-    fira-code-nerdfont
   ];
-
+   services.vscode-server.enable = true;
   # Git with delta for diffs
   programs.git = {
     enable = true;
@@ -60,8 +73,4 @@
       };
     };
   };
-
-  # Set Zsh as default shell
-  home.shell = pkgs.zsh;
 }
-
