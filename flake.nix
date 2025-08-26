@@ -33,7 +33,7 @@
       inherit system;
       modules = [
         ./configuration.nix
-        #    catppuccin.nixosModules.catppuccin
+        ./modules/dynamic-wallpaper.nix
         home-manager.nixosModules.home-manager
         vscode-server.nixosModules.default
         {
@@ -56,15 +56,11 @@
               };
 
               "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
-                name = "Chromium";
-                command = "chromium";
-                binding = "<Super>c";
+                name = "Brave";
+                command = "brave";
+                binding = "<Super>b";
               };
-            }; #        imports = [catppuccin.homeModules.catppuccin];
-            #       catppuccin = {
-            #        enable = true;
-            #       flavor = "macchiato"; # optional
-            #    };
+            };
 
             programs.zsh = {
               enable = true;
@@ -72,6 +68,11 @@
               syntaxHighlighting.enable = true;
               autosuggestion.enable = true;
               history.size = 10000;
+              initContent = ''
+                if [ -f ~/.git_aliases ]; then
+                   source ~/.git_aliases
+                fi
+              '';
             };
             programs.starship = {
               enable = true;
@@ -107,7 +108,10 @@
             programs.vscode = {
               enable = true;
               package = pkgs.vscode-fhs;
-              userSettings = builtins.fromJSON (builtins.readFile ./vscode/styles.json);
+              profiles.default.userSettings = nixpkgs.lib.recursiveUpdate (builtins.fromJSON (builtins.readFile ./vscode/styles.json)) {
+                update.mode = "none";
+                extensions.autoUpdate = true;
+              };
             };
 
             home.packages = with pkgs; [
@@ -128,6 +132,12 @@
               pnpm
               vlc
               timg
+              ffmpeg
+              brave
+              yt-dlp
+              aria2
+              ani-skip
+              mpv
             ];
           };
         }
@@ -137,9 +147,11 @@
           virtualisation.docker.enable = true;
           users.users.elijah.extraGroups = ["docker"];
 
-          services.openssh.enable = true;
-          services.openssh.permitRootLogin = "no";
-          services.openssh.passwordAuthentication = false;
+          services.openssh.settings = {
+            enable = true;
+            PermitRootLogin = "no";
+            PasswordAuthentication = false;
+          };
 
           fonts.packages = with nixpkgs.legacyPackages.${system}; [
             nerd-fonts.agave

@@ -357,6 +357,7 @@
     "accessibility.signals.diffLineDeleted": {
         "sound": "off"
     },
+    "glassit-linux.opacity": 93,
     "editor.stickyScroll.enabled": false,
     "console-ninja.featureSet": "Community",
     "git.autofetch": true,
@@ -416,5 +417,5 @@
             "statusBarItem.remoteHoverForeground": "#000000"
         }
     },
-    "workbench.settings.applyToAllProfiles": []
+  "workbench.settings.applyToAllProfiles": []
 }

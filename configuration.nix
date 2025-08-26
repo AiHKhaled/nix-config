@@ -62,6 +62,7 @@
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
 
+  services.flatpak.enable = true;
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -95,11 +96,11 @@
   programs.firefox.enable = false;
   programs.zsh.enable = true;
   programs.dconf.enable = true;
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim
+    neovim
+    vimPlugins.lazy-nvim
     wget
     unzip
     bash-completion
@@ -114,7 +115,13 @@
     gnomeExtensions.rounded-window-corners-reborn
     gnome-tweaks
     nodejs_24
-    chromium
+    zig
+    gnumake
+    pkg-config
+    libgtop
+    lm_sensors
+    xorg.xprop
+    wmctrl
   ];
   # catppuccin = {
   #	enable = true;
